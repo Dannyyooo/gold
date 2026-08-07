@@ -2,7 +2,10 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>黃金換算器</title>
     <style>
         :root {
@@ -15,32 +18,31 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif;
-            background-color: #000; 
+            background-color: #000;
             color: var(--black);
             margin: 0; display: flex; justify-content: center; align-items: center;
             min-height: 100vh; padding: 20px;
         }
 
         .card {
-            background: var(--gold-bg); 
+            background: var(--gold-bg);
             width: 100%; max-width: 380px;
-            border-radius: 30px; padding: 45px 35px; 
+            border-radius: 30px; padding: 45px 35px;
             box-shadow: 0 30px 60px rgba(0,0,0,0.8);
             text-align: center;
             border: 4px solid #000;
             position: relative;
-            /* 縮小成 80% */
             zoom: 0.8;
             -moz-transform: scale(0.8);
             -moz-transform-origin: center;
         }
 
-        .header h1 { 
-            font-size: 20px; font-weight: 900; color: var(--black); margin: 0; 
+        .header h1 {
+            font-size: 20px; font-weight: 900; color: var(--black); margin: 0;
             letter-spacing: 2px; text-transform: uppercase;
         }
-        .header p { 
-            font-size: 12px; color: rgba(0,0,0,0.6); margin: 8px 0 25px; 
+        .header p {
+            font-size: 12px; color: rgba(0,0,0,0.6); margin: 8px 0 25px;
             font-weight: 900;
         }
 
@@ -49,14 +51,14 @@
             border: 2px solid rgba(0, 0, 0, 0.1); margin-bottom: 25px;
         }
 
-        .price-label { 
-            font-size: 16px; color: var(--black-soft); margin-bottom: 10px; 
+        .price-label {
+            font-size: 16px; color: var(--black-soft); margin-bottom: 10px;
             font-weight: 900;
         }
-        
-        .price-val { 
-            font-size: 56px; 
-            font-weight: 900; 
+
+        .price-val {
+            font-size: 56px;
+            font-weight: 900;
             color: var(--black);
             line-height: 1;
             letter-spacing: -2px;
@@ -64,12 +66,12 @@
             display: block;
         }
 
-        .update-time { 
-            font-size: 14px; color: rgba(0,0,0,0.7); margin-top: 15px; 
+        .update-time {
+            font-size: 14px; color: rgba(0,0,0,0.7); margin-top: 15px;
             font-weight: 900;
         }
 
-        .change-info { 
+        .change-info {
             font-size: 24px; font-weight: 900; margin-top: 12px;
             min-height: 28px;
         }
@@ -77,23 +79,23 @@
         .down { color: var(--down-green) !important; text-shadow: 1px 1px 1px rgba(255,255,255,0.5); }
 
         .input-area { margin-bottom: 35px; }
-        .input-area label { 
-            display: block; font-size: 16px; color: var(--black); 
+        .input-area label {
+            display: block; font-size: 16px; color: var(--black);
             margin-bottom: 12px; font-weight: 900; text-transform: uppercase;
         }
         .input-wrap input {
             width: 100%; background: rgba(255,255,255,0.4); border: 3px solid #000; color: #000;
-            padding: 15px; border-radius: 15px; font-size: 32px; 
+            padding: 15px; border-radius: 15px; font-size: 32px;
             font-weight: 900; outline: none; box-sizing: border-box; text-align: center;
         }
 
         .total-box { padding-top: 30px; border-top: 2px solid rgba(0,0,0,0.1); }
-        .total-label { 
-            font-size: 16px; color: rgba(0,0,0,0.7); margin-bottom: 10px; 
+        .total-label {
+            font-size: 16px; color: rgba(0,0,0,0.7); margin-bottom: 10px;
             font-weight: 900;
         }
-        .total-val { 
-            font-size: 48px; font-weight: 900; color: var(--black); 
+        .total-val {
+            font-size: 48px; font-weight: 900; color: var(--black);
             letter-spacing: -1px;
         }
 
@@ -142,17 +144,20 @@
             <span class="status-dot syncing"></span>正在抓取最新市場行情
         </div>
 
-        <button class="btn" onclick="sync()">手動重新整理</button>
+        <button class="btn" id="refresh-btn" onclick="sync()">手動重新整理</button>
     </div>
 
     <script>
         let gP = 0;
+        let syncing = false;
         const G_URL = 'https://www.goldlegend.com/tw/price';
+        const AUTO_REFRESH_MS = 5 * 60 * 1000;
 
         function init() {
             const lp = localStorage.getItem('p');
             const lc = localStorage.getItem('c');
             const lt = localStorage.getItem('t');
+
             if (lp) {
                 gP = parseFloat(lp);
                 document.getElementById('p-txt').textContent = gP.toLocaleString();
@@ -160,67 +165,118 @@
                 document.getElementById('u-time').textContent = `最後同步: ${lt || '存檔資料'}`;
                 calc();
             }
+
             sync();
+            setInterval(sync, AUTO_REFRESH_MS);
         }
 
         async function sync() {
-            const sb = document.getElementById('s-bar');
-            sb.innerHTML = '<span class="status-dot syncing"></span>正在抓取最新市場行情';
+            if (syncing) return;
+            syncing = true;
 
+            const sb = document.getElementById('s-bar');
+            const button = document.getElementById('refresh-btn');
+            sb.innerHTML = '<span class="status-dot syncing"></span>正在抓取最新市場行情';
+            button.disabled = true;
+            button.textContent = '更新中...';
+
+            const cacheKey = Date.now();
+            const freshUrl = `${G_URL}?_=${cacheKey}`;
             const proxies = [
-                `https://api.allorigins.win/raw?url=${encodeURIComponent(G_URL)}`,
-                `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(G_URL)}`
+                `https://api.allorigins.win/raw?url=${encodeURIComponent(freshUrl)}&_=${cacheKey}`,
+                `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(freshUrl)}&_=${cacheKey}`
             ];
 
             try {
-                const fetchP = async (u) => {
-                    const r = await fetch(u);
-                    if (!r.ok) throw new Error();
-                    const t = await r.text();
-                    if (t.length < 500) throw new Error();
-                    return t;
+                const fetchP = async (url) => {
+                    const controller = new AbortController();
+                    const timeout = setTimeout(() => controller.abort(), 12000);
+
+                    try {
+                        const response = await fetch(url, {
+                            cache: 'no-store',
+                            signal: controller.signal
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`代理回應錯誤：${response.status}`);
+                        }
+
+                        const html = await response.text();
+                        if (html.length < 500) {
+                            throw new Error('代理回傳內容不完整');
+                        }
+                        return html;
+                    } finally {
+                        clearTimeout(timeout);
+                    }
                 };
 
-                const h = await Promise.any(proxies.map(p => fetchP(p)));
-                const ps = new DOMParser();
-                const d = ps.parseFromString(h, 'text/html');
+                const html = await Promise.any(proxies.map(fetchP));
+                const doc = new DOMParser().parseFromString(html, 'text/html');
 
-                let p = 0;
-                const its = d.querySelectorAll('.summary-item');
-                its.forEach(i => {
-                    if (i.textContent.includes('今日買進')) {
-                        const v = i.querySelector('.summary-value');
-                        if (v) p = parseFloat(v.textContent.replace(/,/g, ''));
+                let price = 0;
+                const summaryItems = doc.querySelectorAll('.summary-item');
+                summaryItems.forEach(item => {
+                    if (item.textContent.includes('今日買進')) {
+                        const value = item.querySelector('.summary-value');
+                        if (value) {
+                            price = parseFloat(value.textContent.replace(/,/g, ''));
+                        }
                     }
                 });
 
-                if (!p) {
-                    const c = d.querySelector('#priceTable tbody tr td:nth-child(3)');
-                    if (c) p = parseFloat(c.textContent.replace(/,/g, ''));
+                if (!price) {
+                    const priceCell = doc.querySelector('#priceTable tbody tr td:nth-child(3)');
+                    if (priceCell) {
+                        price = parseFloat(priceCell.textContent.replace(/,/g, ''));
+                    }
                 }
 
-                let ch = '';
-                const cc = d.querySelector('#priceTable tbody tr td:nth-child(4)');
-                if (cc) {
-                    const t = cc.textContent.trim();
-                    const cls = t.includes('▲') ? 'up' : (t.includes('▼') ? 'down' : '');
-                    ch = `<span class="${cls}">${t}</span>`;
+                if (!(price > 0)) {
+                    throw new Error('網頁中找不到有效金價');
                 }
 
-                if (p > 0) {
-                    gP = p;
-                    const now = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
-                    document.getElementById('p-txt').textContent = gP.toLocaleString();
-                    document.getElementById('c-txt').innerHTML = ch;
-                    document.getElementById('u-time').textContent = `最後同步: ${now}`;
-                    sb.innerHTML = '<span class="status-dot online"></span>市場數據同步成功';
-                    localStorage.setItem('p', p);
-                    localStorage.setItem('c', ch);
-                    localStorage.setItem('t', now);
-                    calc();
+                let changeHtml = '';
+                const changeCell = doc.querySelector('#priceTable tbody tr td:nth-child(4)');
+                if (changeCell) {
+                    const changeText = changeCell.textContent.trim();
+                    const changeClass = changeText.includes('▲')
+                        ? 'up'
+                        : (changeText.includes('▼') ? 'down' : '');
+                    changeHtml = `<span class="${changeClass}">${changeText}</span>`;
                 }
-            } catch (e) {
-                sb.innerHTML = '<span class="status-dot" style="background:#555"></span>同步稍慢 (已顯示緩存)';
+
+                gP = price;
+                const now = new Date().toLocaleString('zh-TW', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false
+                });
+
+                document.getElementById('p-txt').textContent = gP.toLocaleString();
+                document.getElementById('c-txt').innerHTML = changeHtml;
+                document.getElementById('u-time').textContent = `最後同步: ${now}`;
+                sb.innerHTML = '<span class="status-dot online"></span>市場數據同步成功（每 5 分鐘自動更新）';
+
+                localStorage.setItem('p', String(price));
+                localStorage.setItem('c', changeHtml);
+                localStorage.setItem('t', now);
+                calc();
+            } catch (error) {
+                const hasCache = Boolean(localStorage.getItem('p'));
+                sb.innerHTML = hasCache
+                    ? '<span class="status-dot" style="background:#555"></span>目前無法取得新資料（已顯示上次成功資料）'
+                    : '<span class="status-dot" style="background:#ff0000"></span>目前無法取得金價，請稍後再試';
+                console.error('金價同步失敗：', error);
+            } finally {
+                syncing = false;
+                button.disabled = false;
+                button.textContent = '手動重新整理';
             }
         }
 
