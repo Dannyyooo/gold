@@ -7,6 +7,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>黃金換算器</title>
+
     <style>
         :root {
             --gold-bg: linear-gradient(135deg, #f1c40f 0%, #d4af37 100%);
@@ -17,18 +18,25 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                Roboto, "Microsoft JhengHei", sans-serif;
             background-color: #000;
             color: var(--black);
-            margin: 0; display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; padding: 20px;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
         }
 
         .card {
             background: var(--gold-bg);
-            width: 100%; max-width: 380px;
-            border-radius: 30px; padding: 45px 35px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            width: 100%;
+            max-width: 380px;
+            border-radius: 30px;
+            padding: 45px 35px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
             text-align: center;
             border: 4px solid #000;
             position: relative;
@@ -38,21 +46,33 @@
         }
 
         .header h1 {
-            font-size: 20px; font-weight: 900; color: var(--black); margin: 0;
-            letter-spacing: 2px; text-transform: uppercase;
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--black);
+            margin: 0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
+
         .header p {
-            font-size: 12px; color: rgba(0,0,0,0.6); margin: 8px 0 25px;
+            font-size: 12px;
+            color: rgba(0, 0, 0, 0.6);
+            margin: 8px 0 25px;
             font-weight: 900;
         }
 
         .price-box {
-            background: rgba(0, 0, 0, 0.05); border-radius: 20px; padding: 30px 15px;
-            border: 2px solid rgba(0, 0, 0, 0.1); margin-bottom: 25px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 20px;
+            padding: 30px 15px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
         }
 
         .price-label {
-            font-size: 16px; color: var(--black-soft); margin-bottom: 10px;
+            font-size: 16px;
+            color: var(--black-soft);
+            margin-bottom: 10px;
             font-weight: 900;
         }
 
@@ -67,54 +87,124 @@
         }
 
         .update-time {
-            font-size: 14px; color: rgba(0,0,0,0.7); margin-top: 15px;
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.7);
+            margin-top: 15px;
             font-weight: 900;
         }
 
         .change-info {
-            font-size: 24px; font-weight: 900; margin-top: 12px;
+            font-size: 24px;
+            font-weight: 900;
+            margin-top: 12px;
             min-height: 28px;
         }
-        .up { color: var(--up-red) !important; text-shadow: 1px 1px 1px rgba(255,255,255,0.5); }
-        .down { color: var(--down-green) !important; text-shadow: 1px 1px 1px rgba(255,255,255,0.5); }
 
-        .input-area { margin-bottom: 35px; }
+        .up {
+            color: var(--up-red) !important;
+            text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.5);
+        }
+
+        .down {
+            color: var(--down-green) !important;
+            text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.5);
+        }
+
+        .input-area {
+            margin-bottom: 35px;
+        }
+
         .input-area label {
-            display: block; font-size: 16px; color: var(--black);
-            margin-bottom: 12px; font-weight: 900; text-transform: uppercase;
-        }
-        .input-wrap input {
-            width: 100%; background: rgba(255,255,255,0.4); border: 3px solid #000; color: #000;
-            padding: 15px; border-radius: 15px; font-size: 32px;
-            font-weight: 900; outline: none; box-sizing: border-box; text-align: center;
+            display: block;
+            font-size: 16px;
+            color: var(--black);
+            margin-bottom: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
         }
 
-        .total-box { padding-top: 30px; border-top: 2px solid rgba(0,0,0,0.1); }
+        .input-wrap input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.4);
+            border: 3px solid #000;
+            color: #000;
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 32px;
+            font-weight: 900;
+            outline: none;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .total-box {
+            padding-top: 30px;
+            border-top: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
         .total-label {
-            font-size: 16px; color: rgba(0,0,0,0.7); margin-bottom: 10px;
+            font-size: 16px;
+            color: rgba(0, 0, 0, 0.7);
+            margin-bottom: 10px;
             font-weight: 900;
         }
+
         .total-val {
-            font-size: 48px; font-weight: 900; color: var(--black);
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--black);
             letter-spacing: -1px;
         }
 
-        .status { font-size: 13px; margin-top: 35px; color: var(--black-soft); font-weight: 900; }
-        .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; border: 1px solid #000; }
-        .online { background: #00ff88; }
-        .syncing { background: #fff; animation: blink 1s infinite; }
+        .status {
+            font-size: 13px;
+            margin-top: 35px;
+            color: var(--black-soft);
+            font-weight: 900;
+        }
 
-        @keyframes blink { 0% { opacity: 0.2; } 50% { opacity: 1; } 100% { opacity: 0.2; } }
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            border: 1px solid #000;
+        }
+
+        .online {
+            background: #00ff88;
+        }
+
+        .syncing {
+            background: #fff;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0% { opacity: 0.2; }
+            50% { opacity: 1; }
+            100% { opacity: 0.2; }
+        }
 
         .btn {
-            background: #000; border: none; color: #fff; padding: 15px;
-            border-radius: 12px; font-size: 14px; cursor: pointer; margin-top: 25px; width: 100%;
-            font-weight: 900; text-transform: uppercase; letter-spacing: 1px;
+            background: #000;
+            border: none;
+            color: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 25px;
+            width: 100%;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
     </style>
 </head>
-<body>
 
+<body>
     <div class="card">
         <div class="header">
             <h1>Gold Terminal</h1>
@@ -124,14 +214,23 @@
         <div class="price-box">
             <div class="price-label">今日「買進」金價</div>
             <div class="price-val" id="p-txt">0</div>
-            <div class="update-time" id="u-time">最後同步: 載入中...</div>
+            <div class="update-time" id="u-time">
+                最後同步: 載入中...
+            </div>
             <div id="c-txt" class="change-info">--</div>
         </div>
 
         <div class="input-area">
             <label>持有黃金重量 (錢)</label>
+
             <div class="input-wrap">
-                <input type="number" id="w-in" value="25.24" step="0.01" oninput="calc()">
+                <input
+                    type="number"
+                    id="w-in"
+                    value="25.24"
+                    step="0.01"
+                    oninput="calc()"
+                >
             </div>
         </div>
 
@@ -141,28 +240,62 @@
         </div>
 
         <div id="s-bar" class="status">
-            <span class="status-dot syncing"></span>正在抓取最新市場行情
+            <span class="status-dot syncing"></span>
+            正在抓取最新市場行情
         </div>
 
-        <button class="btn" id="refresh-btn" onclick="sync()">手動重新整理</button>
+        <button
+            class="btn"
+            id="refresh-btn"
+            onclick="sync()"
+        >
+            手動重新整理
+        </button>
     </div>
 
     <script>
         let gP = 0;
         let syncing = false;
-        const G_URL = 'https://www.goldlegend.com/tw/price';
+
+        const PRICE_DATA_URL = "./price.json";
         const AUTO_REFRESH_MS = 5 * 60 * 1000;
 
-        function init() {
-            const lp = localStorage.getItem('p');
-            const lc = localStorage.getItem('c');
-            const lt = localStorage.getItem('t');
+        function renderChange(value) {
+            const element = document.getElementById("c-txt");
 
-            if (lp) {
-                gP = parseFloat(lp);
-                document.getElementById('p-txt').textContent = gP.toLocaleString();
-                document.getElementById('c-txt').innerHTML = lc || '';
-                document.getElementById('u-time').textContent = `最後同步: ${lt || '存檔資料'}`;
+            const text = String(value || "")
+                .replace(/<[^>]*>/g, "")
+                .trim();
+
+            element.className = "change-info";
+
+            if (text.includes("▲")) {
+                element.classList.add("up");
+            }
+
+            if (text.includes("▼")) {
+                element.classList.add("down");
+            }
+
+            element.textContent = text || "--";
+        }
+
+        function init() {
+            const savedPrice = localStorage.getItem("p");
+            const savedChange = localStorage.getItem("c");
+            const savedTime = localStorage.getItem("t");
+
+            if (savedPrice) {
+                gP = parseFloat(savedPrice);
+
+                document.getElementById("p-txt").textContent =
+                    gP.toLocaleString();
+
+                renderChange(savedChange);
+
+                document.getElementById("u-time").textContent =
+                    `最後同步: ${savedTime || "存檔資料"}`;
+
                 calc();
             }
 
@@ -171,119 +304,110 @@
         }
 
         async function sync() {
-            if (syncing) return;
+            if (syncing) {
+                return;
+            }
+
             syncing = true;
 
-            const sb = document.getElementById('s-bar');
-            const button = document.getElementById('refresh-btn');
-            sb.innerHTML = '<span class="status-dot syncing"></span>正在抓取最新市場行情';
-            button.disabled = true;
-            button.textContent = '更新中...';
+            const statusBar = document.getElementById("s-bar");
+            const button = document.getElementById("refresh-btn");
 
-            const cacheKey = Date.now();
-            const freshUrl = `${G_URL}?_=${cacheKey}`;
-            const proxies = [
-                `https://api.allorigins.win/raw?url=${encodeURIComponent(freshUrl)}&_=${cacheKey}`,
-                `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(freshUrl)}&_=${cacheKey}`
-            ];
+            statusBar.innerHTML =
+                '<span class="status-dot syncing"></span>' +
+                "正在抓取最新市場行情";
+
+            button.disabled = true;
+            button.textContent = "更新中...";
 
             try {
-                const fetchP = async (url) => {
-                    const controller = new AbortController();
-                    const timeout = setTimeout(() => controller.abort(), 12000);
-
-                    try {
-                        const response = await fetch(url, {
-                            cache: 'no-store',
-                            signal: controller.signal
-                        });
-
-                        if (!response.ok) {
-                            throw new Error(`代理回應錯誤：${response.status}`);
-                        }
-
-                        const html = await response.text();
-                        if (html.length < 500) {
-                            throw new Error('代理回傳內容不完整');
-                        }
-                        return html;
-                    } finally {
-                        clearTimeout(timeout);
+                const response = await fetch(
+                    `${PRICE_DATA_URL}?_=${Date.now()}`,
+                    {
+                        cache: "no-store"
                     }
-                };
+                );
 
-                const html = await Promise.any(proxies.map(fetchP));
-                const doc = new DOMParser().parseFromString(html, 'text/html');
-
-                let price = 0;
-                const summaryItems = doc.querySelectorAll('.summary-item');
-                summaryItems.forEach(item => {
-                    if (item.textContent.includes('今日買進')) {
-                        const value = item.querySelector('.summary-value');
-                        if (value) {
-                            price = parseFloat(value.textContent.replace(/,/g, ''));
-                        }
-                    }
-                });
-
-                if (!price) {
-                    const priceCell = doc.querySelector('#priceTable tbody tr td:nth-child(3)');
-                    if (priceCell) {
-                        price = parseFloat(priceCell.textContent.replace(/,/g, ''));
-                    }
+                if (!response.ok) {
+                    throw new Error(
+                        `金價資料回應錯誤：${response.status}`
+                    );
                 }
 
-                if (!(price > 0)) {
-                    throw new Error('網頁中找不到有效金價');
-                }
+                const data = await response.json();
+                const price = Number(data.price);
 
-                let changeHtml = '';
-                const changeCell = doc.querySelector('#priceTable tbody tr td:nth-child(4)');
-                if (changeCell) {
-                    const changeText = changeCell.textContent.trim();
-                    const changeClass = changeText.includes('▲')
-                        ? 'up'
-                        : (changeText.includes('▼') ? 'down' : '');
-                    changeHtml = `<span class="${changeClass}">${changeText}</span>`;
+                if (!Number.isFinite(price) || price <= 0) {
+                    throw new Error("金價資料格式無效");
                 }
 
                 gP = price;
-                const now = new Date().toLocaleString('zh-TW', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    hour12: false
-                });
 
-                document.getElementById('p-txt').textContent = gP.toLocaleString();
-                document.getElementById('c-txt').innerHTML = changeHtml;
-                document.getElementById('u-time').textContent = `最後同步: ${now}`;
-                sb.innerHTML = '<span class="status-dot online"></span>市場數據同步成功（每 5 分鐘自動更新）';
+                const updatedAt = data.updated_at
+                    ? new Date(data.updated_at).toLocaleString(
+                        "zh-TW",
+                        {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            second: "2-digit",
+                            hour12: false
+                        }
+                    )
+                    : "未知";
 
-                localStorage.setItem('p', String(price));
-                localStorage.setItem('c', changeHtml);
-                localStorage.setItem('t', now);
+                document.getElementById("p-txt").textContent =
+                    gP.toLocaleString();
+
+                renderChange(data.change);
+
+                document.getElementById("u-time").textContent =
+                    `最後同步: ${updatedAt}`;
+
+                statusBar.innerHTML =
+                    '<span class="status-dot online"></span>' +
+                    "市場數據同步成功（每 5 分鐘檢查更新）";
+
+                localStorage.setItem("p", String(price));
+                localStorage.setItem(
+                    "c",
+                    String(data.change || "")
+                );
+                localStorage.setItem("t", updatedAt);
+
                 calc();
             } catch (error) {
-                const hasCache = Boolean(localStorage.getItem('p'));
-                sb.innerHTML = hasCache
-                    ? '<span class="status-dot" style="background:#555"></span>目前無法取得新資料（已顯示上次成功資料）'
-                    : '<span class="status-dot" style="background:#ff0000"></span>目前無法取得金價，請稍後再試';
-                console.error('金價同步失敗：', error);
+                const hasCache =
+                    Boolean(localStorage.getItem("p"));
+
+                statusBar.innerHTML = hasCache
+                    ? '<span class="status-dot" ' +
+                      'style="background:#555"></span>' +
+                      "目前無法取得新資料（已顯示上次成功資料）"
+                    : '<span class="status-dot" ' +
+                      'style="background:#ff0000"></span>' +
+                      "目前無法取得金價，請稍後再試";
+
+                console.error("金價同步失敗：", error);
             } finally {
                 syncing = false;
                 button.disabled = false;
-                button.textContent = '手動重新整理';
+                button.textContent = "手動重新整理";
             }
         }
 
         function calc() {
-            const w = parseFloat(document.getElementById('w-in').value) || 0;
-            const t = Math.floor(gP * w);
-            document.getElementById('t-txt').textContent = `NT$ ${t.toLocaleString()}`;
+            const weight =
+                parseFloat(
+                    document.getElementById("w-in").value
+                ) || 0;
+
+            const total = Math.floor(gP * weight);
+
+            document.getElementById("t-txt").textContent =
+                `NT$ ${total.toLocaleString()}`;
         }
 
         window.onload = init;
